@@ -1,7 +1,5 @@
 import random
 
-# ── Utilidades César variable ──────────────────────────────────────────────────
-
 def extraer_digitos(n: int) -> list:
     return [int(d) for d in str(abs(n))]
 
@@ -18,8 +16,6 @@ def cesar_descifrar(texto: str, digitos: list) -> str:
         shift = digitos[i % len(digitos)]
         resultado.append(chr((ord(c) - ord('A') - shift) % 26 + ord('A')))
     return ''.join(resultado)
-
-# ── Generación de componentes desde dato público ───────────────────────────────
 
 def generar_reflector(rng) -> list:
     indices = list(range(26))
@@ -42,8 +38,6 @@ def generar_componentes(dato_publico: int) -> dict:
         notches.append(rng.randint(0, 25))
     reflector = generar_reflector(rng)
     return {"rotores": rotores, "notches": notches, "reflector": reflector}
-
-# ── Núcleo de la máquina Enigma ────────────────────────────────────────────────
 
 def invertir_permutacion(perm: list) -> list:
     inv = [0] * len(perm)
@@ -69,12 +63,10 @@ def _pasar_rotor_inv(idx: int, inv_perm: list, offset: int) -> int:
     return (inv_perm[(idx + offset) % 26] - offset) % 26
 
 def cifrar_letra(idx: int, rotores: list, inv_rotores: list, reflector: list, pos: list) -> int:
-    # Ida: rotor 0 → rotor 1 → rotor 2 → reflector
     idx = _pasar_rotor(idx, rotores[0], pos[0])
     idx = _pasar_rotor(idx, rotores[1], pos[1])
     idx = _pasar_rotor(idx, rotores[2], pos[2])
     idx = reflector[idx]
-    # Vuelta: rotor 2 inv → rotor 1 inv → rotor 0 inv
     idx = _pasar_rotor_inv(idx, inv_rotores[2], pos[2])
     idx = _pasar_rotor_inv(idx, inv_rotores[1], pos[1])
     idx = _pasar_rotor_inv(idx, inv_rotores[0], pos[0])
@@ -97,8 +89,6 @@ def cifrar_mensaje(mensaje: str, dato_publico: int, posiciones_init: list) -> st
         idx = cifrar_letra(idx, rotores, inv_rotores, reflector, pos)
         resultado.append(chr(idx + ord('A')))
     return ''.join(resultado)
-
-# ── Interfaz de usuario ────────────────────────────────────────────────────────
 
 def main():
     print("=" * 50)
