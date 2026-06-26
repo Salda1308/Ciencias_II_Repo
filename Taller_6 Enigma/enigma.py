@@ -97,3 +97,50 @@ def cifrar_mensaje(mensaje: str, dato_publico: int, posiciones_init: list) -> st
         idx = cifrar_letra(idx, rotores, inv_rotores, reflector, pos)
         resultado.append(chr(idx + ord('A')))
     return ''.join(resultado)
+
+# ── Interfaz de usuario ────────────────────────────────────────────────────────
+
+def main():
+    print("=" * 50)
+    print("       MÁQUINA ENIGMA — Taller 6")
+    print("=" * 50)
+
+    dato_publico = int(input("\nIngresa el dato público (número entero): "))
+    clave_cifrada = input("Ingresa la clave cifrada (3 letras A-Z): ").upper().strip()
+
+    if len(clave_cifrada) != 3 or not clave_cifrada.isalpha():
+        print("Error: la clave cifrada debe ser exactamente 3 letras A-Z.")
+        return
+
+    digitos = extraer_digitos(dato_publico)
+    posiciones_str = cesar_descifrar(clave_cifrada, digitos)
+    posiciones_init = [ord(c) - ord('A') for c in posiciones_str]
+
+    print(f"\nPosiciones iniciales de rotores: {posiciones_str}")
+
+    modo = input("\nModo — Cifrar (C) / Descifrar (D): ").upper().strip()
+    if modo not in ("C", "D"):
+        print("Error: ingresa 'C' para cifrar o 'D' para descifrar.")
+        return
+
+    mensaje = input("Ingresa el mensaje (solo letras A-Z): ").upper()
+    letras = ''.join(c for c in mensaje if c.isalpha())
+
+    if not letras:
+        print("Error: el mensaje no contiene letras.")
+        return
+
+    resultado = cifrar_mensaje(letras, dato_publico, posiciones_init)
+
+    print("\n" + "=" * 50)
+    print(f"Dato público   : {dato_publico}")
+    print(f"Clave cifrada  : {clave_cifrada}")
+    print(f"Posiciones init: {posiciones_str}")
+    accion = "Cifrado" if modo == "C" else "Descifrado"
+    print(f"Mensaje        : {letras}")
+    print(f"{accion}      : {resultado}")
+    print("=" * 50)
+
+
+if __name__ == "__main__":
+    main()
